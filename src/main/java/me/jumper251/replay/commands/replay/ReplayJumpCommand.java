@@ -35,7 +35,7 @@ public class ReplayJumpCommand extends SubCommand {
 				int seconds = Integer.valueOf(args[1]);
 				
 				p.sendMessage(ReplaySystem.PREFIX +"Jumping to §e" + seconds + " §7seconds...");
-				ReplayAPI.getInstance().jumpToReplayTime(p, seconds);
+				ReplayAPI.getInstance().jumpToReplayTime(p, seconds, null);
 			} else {
 				p.sendMessage(ReplaySystem.PREFIX + "§cTime has to be between 1 and " + (duration - 1));
 			}

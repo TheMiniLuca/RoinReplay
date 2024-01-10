@@ -8,7 +8,7 @@ import me.jumper251.replay.commands.SubCommand;
 public class ReplayCommand extends AbstractCommand {
 
 	public ReplayCommand() {
-		super("Replay", ReplaySystem.PREFIX + "AdvancedReplay §ev" + ReplaySystem.getInstance().getDescription().getVersion(), "replay.command");
+		super("ReplayAdmin", ReplaySystem.PREFIX + "AdvancedReplay §ev" + ReplaySystem.getInstance().getDescription().getVersion(), "replay.command");
 	}
 
 	@Override

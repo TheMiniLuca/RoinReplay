@@ -41,88 +41,88 @@ import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
 public class ReplayListener extends AbstractListener {
 
-	@SuppressWarnings("deprecation")
-	@EventHandler (priority = EventPriority.MONITOR)
-	public void onInteract(PlayerInteractEvent e) {
-		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Player p = e.getPlayer();
-			if (ReplayHelper.replaySessions.containsKey(p.getName())) {
-				e.setCancelled(true);
-				
-				Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
-				if (p.getItemInHand() == null) return;
-				if (p.getItemInHand().getItemMeta() == null) return;
-				
-				ItemMeta meta = p.getItemInHand().getItemMeta();
-				ItemConfigType itemType = ItemConfig.getByIdAndName(p.getItemInHand().getType(), meta.getDisplayName().replaceAll("§", "&"));
-				
-				if (itemType == ItemConfigType.PAUSE) {
-					replayer.setPaused(!replayer.isPaused());
-					ReplayHelper.sendTitle(p, " ", "§c❙❙", 20);
-				}
-					
-				if (itemType == ItemConfigType.FORWARD) {
-					replayer.getUtils().forward();
-					ReplayHelper.sendTitle(p, " ", "§a»»", 20);
-
-				}
-				if (itemType == ItemConfigType.BACKWARD) {
-					replayer.getUtils().backward();
-					ReplayHelper.sendTitle(p, " ", "§c««", 20);
-
-				}
-				
-				
-				if (itemType == ItemConfigType.RESUME) {
-					replayer.setPaused(!replayer.isPaused());
-					ReplayHelper.sendTitle(p, " ", "§a➤", 20);
-
-				}
-				
-				if (itemType == ItemConfigType.SPEED) {
-					if (p.isSneaking()) {
-						if (replayer.getSpeed() < 1) {
-							replayer.setSpeed(1);
-						} else if (replayer.getSpeed() == 1) {
-							replayer.setSpeed(2);
-						}
-						
-					} else {
-						if (replayer.getSpeed() == 2) {
-							replayer.setSpeed(1);
-						} else if (replayer.getSpeed() ==  1) {
-							replayer.setSpeed(0.5D);
-						} else if (replayer.getSpeed() == 0.5D) {
-							 replayer.setSpeed(0.25D);
-						}
-					}
-					
-					
-				}
-				
-				if (itemType == ItemConfigType.LEAVE) {
-					replayer.stop();
-				}
-				
-				if (itemType == ItemConfigType.TELEPORT) {
-					ReplayHelper.createTeleporter(p, replayer);
-				}
-				
-				ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
-				
-				if (itemType == ItemConfigType.PAUSE || itemType == ItemConfigType.RESUME) {
-					if (replayer.isPaused()) {
-						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getResumeItem());
-					} else {
-						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getPauseItem());
-					}
-				}
-				
-				
-				
-			}
-		}
-	}
+//	@SuppressWarnings("deprecation")
+//	@EventHandler (priority = EventPriority.MONITOR)
+//	public void onInteract(PlayerInteractEvent e) {
+//		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+//			Player p = e.getPlayer();
+//			if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+//				e.setCancelled(true);
+//
+//				Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
+//				if (p.getItemInHand() == null) return;
+//				if (p.getItemInHand().getItemMeta() == null) return;
+//
+//				ItemMeta meta = p.getItemInHand().getItemMeta();
+//				ItemConfigType itemType = ItemConfig.getByIdAndName(p.getItemInHand().getType(), meta.getDisplayName().replaceAll("§", "&"));
+//
+//				if (itemType == ItemConfigType.PAUSE) {
+//					replayer.setPaused(!replayer.isPaused());
+//					ReplayHelper.sendTitle(p, " ", "§c❙❙", 20);
+//				}
+//
+//				if (itemType == ItemConfigType.FORWARD) {
+//					replayer.getUtils().forward();
+//					ReplayHelper.sendTitle(p, " ", "§a»»", 20);
+//
+//				}
+//				if (itemType == ItemConfigType.BACKWARD) {
+//					replayer.getUtils().backward();
+//					ReplayHelper.sendTitle(p, " ", "§c««", 20);
+//
+//				}
+//
+//
+//				if (itemType == ItemConfigType.RESUME) {
+//					replayer.setPaused(!replayer.isPaused());
+//					ReplayHelper.sendTitle(p, " ", "§a➤", 20);
+//
+//				}
+//
+//				if (itemType == ItemConfigType.SPEED) {
+//					if (p.isSneaking()) {
+//						if (replayer.getSpeed() < 1) {
+//							replayer.setSpeed(1);
+//						} else if (replayer.getSpeed() == 1) {
+//							replayer.setSpeed(2);
+//						}
+//
+//					} else {
+//						if (replayer.getSpeed() == 2) {
+//							replayer.setSpeed(1);
+//						} else if (replayer.getSpeed() ==  1) {
+//							replayer.setSpeed(0.5D);
+//						} else if (replayer.getSpeed() == 0.5D) {
+//							 replayer.setSpeed(0.25D);
+//						}
+//					}
+//
+//
+//				}
+//
+//				if (itemType == ItemConfigType.LEAVE) {
+//					replayer.stop();
+//				}
+//
+//				if (itemType == ItemConfigType.TELEPORT) {
+//					ReplayHelper.createTeleporter(p, replayer);
+//				}
+//
+//				ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
+//
+//				if (itemType == ItemConfigType.PAUSE || itemType == ItemConfigType.RESUME) {
+//					if (replayer.isPaused()) {
+//						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getResumeItem());
+//					} else {
+//						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getPauseItem());
+//					}
+//				}
+//
+//
+//
+//			}
+//		}
+//	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler

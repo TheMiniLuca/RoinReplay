@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import me.jumper251.replay.api.ReplaySessionRunningEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -51,7 +53,8 @@ public class Replayer {
 	private Replay replay;
 	
 	private BukkitRunnable run;
-	
+
+	private int runTime;
 	private int currentTicks;
 	private double speed, tmpTicks;
 	
@@ -73,24 +76,31 @@ public class Replayer {
 		
 		ReplayHelper.replaySessions.put(watcher.getName(), this);
 	}
+
+
+	private Location change(Location loc, String world) {
+		Location location = loc.clone();
+		if (world != null)
+			location.setWorld(Bukkit.getWorld(world));
+		return location;
+	}
 	
-	
-	public void start() {
+	public void start(String world) {
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
-		this.session.setStart(watcher.getLocation());
+		this.session.setStart(change(watcher.getLocation(), world));
 		
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
 				if (startData.getPacketData() instanceof SpawnData) {
 					SpawnData spawnData = (SpawnData) startData.getPacketData();
-					watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+					watcher.teleport(change(LocationData.toLocation(spawnData.getLocation()), world));
 					break;
 				}
 			}
 		} else {
 			Optional<SpawnData> spawnData = findFirstSpawn(data);
-			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
+            spawnData.ifPresent(value -> watcher.teleport(change(LocationData.toLocation(value.getLocation()), world)));
 		}
 		
 		
@@ -98,31 +108,30 @@ public class Replayer {
 		
 		this.speed = 1;
 		
-		executeTick(0, false);
+		executeTick(0, false, world);
 		
 		this.run = new BukkitRunnable() {
 			
 			@Override
 			public void run() {
-				
+				ReplaySessionRunningEvent event = new ReplaySessionRunningEvent(Replayer.this, watcher, duration);
+				Bukkit.getPluginManager().callEvent(event);
+
+				++runTime;
 				if (Replayer.this.paused) return;
-				
+
 				Replayer.this.tmpTicks += speed;
 				if (Replayer.this.tmpTicks % 1 != 0) return;
-				
+
 				if (currentTicks < duration) {
+					executeTick(currentTicks++, false, world);
 
-					executeTick(currentTicks++, false);
-
-					if ((currentTicks + 2) < duration && speed == 2)  {
-						executeTick(currentTicks++, false);
+					if ((currentTicks + 2) < duration && speed == 2) {
+						executeTick(currentTicks++, false, world);
 
 					}
-					
+
 					updateXPBar();
-				} else {
-					
-					stop();
 				}
 			}
 		};
@@ -131,7 +140,7 @@ public class Replayer {
 		
 	}
 	
-	public void executeTick(int tick, boolean reversed) {
+	public void executeTick(int tick, boolean reversed, String world) {
 		ReplayData data = this.replay.getData();
 		if (!data.getActions().isEmpty() && data.getActions().containsKey(tick)) {
 
@@ -141,7 +150,7 @@ public class Replayer {
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
 								
-				utils.handleAction(action, data, reversed);
+				utils.handleAction(action, data, reversed, world);
 				
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {

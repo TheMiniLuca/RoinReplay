@@ -30,7 +30,7 @@ public class ReplayManager {
 	}
 	
 	private static void registerCommands() {
-		ReplaySystem.getInstance().getCommand("replay").setExecutor(new ReplayCommand());
+		ReplaySystem.getInstance().getCommand("ReplayAdmin").setExecutor(new ReplayCommand());
 	}
 
 }

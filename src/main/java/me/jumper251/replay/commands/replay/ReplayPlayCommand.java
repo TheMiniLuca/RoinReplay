@@ -27,7 +27,7 @@ public class ReplayPlayCommand extends SubCommand {
 
 	@Override
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
-		if (args.length != 2) return false;
+		if (args.length != 3) return false;
 		
 		String name = args[1];
 		
@@ -41,7 +41,7 @@ public class ReplayPlayCommand extends SubCommand {
 					@Override
 					public void accept(Replay replay) {
 						p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration §e" + (replay.getData().getDuration() / 20) + "§7 seconds.");
-						replay.play(p);
+						replay.play(p, args[2]);
 					}
 				});
 

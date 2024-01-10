@@ -55,18 +55,18 @@ public class Replay {
 
 	}
 	
-	public void play(Player watcher) {
+	public void play(Player watcher, String world) {
 		if (!Bukkit.isPrimaryThread()) {
-			Bukkit.getScheduler().runTask(ReplaySystem.getInstance(), () -> startReplay(watcher));
+			Bukkit.getScheduler().runTask(ReplaySystem.getInstance(), () -> startReplay(watcher, world));
 		} else {
-			startReplay(watcher);
+			startReplay(watcher, world);
 		}
 		
 	}
 		
-	private void startReplay(Player watcher) {
+	private void startReplay(Player watcher, String world) {
 		this.replayer = new Replayer(this, watcher);
-		this.replayer.start();
+		this.replayer.start(world);
 		this.isPlaying = true;
 	}
 	
